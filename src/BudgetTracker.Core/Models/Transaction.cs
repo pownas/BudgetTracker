@@ -29,6 +29,9 @@ public class Transaction
     /// Currency day - the day the transaction is valued
     /// </summary>
     public DateTime DateCurrency { get; set; }
+    public Guid AccountId { get; set; }
+    [JsonIgnore]
+    public Account Account { get; set; } = new Account();
     public Guid TransactionCategoryId { get; set; }
     [JsonIgnore]
     public TransactionCategory TransactionCategory { get; set; } = new TransactionCategory();

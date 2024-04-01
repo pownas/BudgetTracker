@@ -28,7 +28,7 @@ public class Account
     public Category Category { get; set; } = new Category();
     [JsonIgnore]
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-    public Guid UserId { get; set; }
+    public Guid CreatedByUserId { get; set; }
     [JsonIgnore]
-    public User User { get; set; } = new User();
+    public ICollection<User> User { get; set; } = new List<User>();
 }

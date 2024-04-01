@@ -1,0 +1,34 @@
+﻿@page "/transactions"
+@using BudgetTracker.Core.Models
+@inject IApiService _apiService
+
+<h3>Transactions</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in TransactionList)
+        {
+            <tr>
+                <td>@transaction.DateTransaction</td>
+                <td>@transaction.Amount</td>
+                <td>@transaction.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private IEnumerable<Transaction> TransactionList { get; set; } = new List<Transaction>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        TransactionList = await _apiService.GetTransactionsAsync();
+    }
+}
