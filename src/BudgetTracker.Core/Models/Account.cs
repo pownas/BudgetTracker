@@ -1,4 +1,6 @@
-﻿namespace BudgetTracker.Core.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace BudgetTracker.Core.Models;
 
 /// <summary>
 /// Konto i "Kontoplanen" <br /><br />
@@ -19,7 +21,14 @@ public class Account
     public int Number { get; set; } = 0;
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public decimal Balance { get; set; } = 0;
+    public bool IsUsed { get; set; } = true;
+    public Guid CategoryId { get; set; }
+    [JsonIgnore]
+    public Category Category { get; set; } = new Category();
+    [JsonIgnore]
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     public Guid UserId { get; set; }
+    [JsonIgnore]
     public User User { get; set; } = new User();
 }

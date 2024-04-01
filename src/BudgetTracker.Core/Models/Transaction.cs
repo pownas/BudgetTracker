@@ -1,4 +1,6 @@
-﻿namespace BudgetTracker.Core.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace BudgetTracker.Core.Models;
 
 public class Transaction
 {
@@ -27,10 +29,13 @@ public class Transaction
     /// Currency day - the day the transaction is valued
     /// </summary>
     public DateTime DateCurrency { get; set; }
-    public Guid CategoryId { get; set; }
-    public TransactionCategory Category { get; set; } = new TransactionCategory();
+    public Guid TransactionCategoryId { get; set; }
+    [JsonIgnore]
+    public TransactionCategory TransactionCategory { get; set; } = new TransactionCategory();
     public Guid UserId { get; set; }
+    [JsonIgnore]
     public User User { get; set; } = new User();
     public Guid PaidById { get; set; }
+    [JsonIgnore]
     public PaidBy PaidBy { get; set; } = new PaidBy();
 }
