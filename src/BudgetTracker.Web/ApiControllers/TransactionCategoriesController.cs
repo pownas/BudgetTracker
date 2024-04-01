@@ -20,14 +20,14 @@ public class TransactionCategoriesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TransactionCategory>>> GetTransactionCategory()
     {
-        return await _context.TransactionCategory.ToListAsync();
+        return await _context.TransactionCategories.ToListAsync();
     }
 
     // GET: api/TransactionCategories/5
     [HttpGet("{id}")]
     public async Task<ActionResult<TransactionCategory>> GetTransactionCategory(Guid id)
     {
-        var transactionCategory = await _context.TransactionCategory.FindAsync(id);
+        var transactionCategory = await _context.TransactionCategories.FindAsync(id);
 
         if (transactionCategory == null)
         {
@@ -73,7 +73,7 @@ public class TransactionCategoriesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TransactionCategory>> PostTransactionCategory(TransactionCategory transactionCategory)
     {
-        _context.TransactionCategory.Add(transactionCategory);
+        _context.TransactionCategories.Add(transactionCategory);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction($"{nameof(GetTransactionCategory)}", new { id = transactionCategory.Id }, transactionCategory);
@@ -83,13 +83,13 @@ public class TransactionCategoriesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTransactionCategory(Guid id)
     {
-        var transactionCategory = await _context.TransactionCategory.FindAsync(id);
+        var transactionCategory = await _context.TransactionCategories.FindAsync(id);
         if (transactionCategory == null)
         {
             return NotFound();
         }
 
-        _context.TransactionCategory.Remove(transactionCategory);
+        _context.TransactionCategories.Remove(transactionCategory);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -97,6 +97,6 @@ public class TransactionCategoriesController : ControllerBase
 
     private bool TransactionCategoryExists(Guid id)
     {
-        return _context.TransactionCategory.Any(e => e.Id == id);
+        return _context.TransactionCategories.Any(e => e.Id == id);
     }
 }

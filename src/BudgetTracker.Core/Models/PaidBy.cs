@@ -9,9 +9,13 @@ namespace BudgetTracker.Core.Models;
 public class PaidBy
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+
     public string Name { get; set; } = string.Empty;
+
     public string Description { get; set; } = string.Empty;
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    
     [JsonIgnore]
-    public ICollection<User> UsersGroup { get; set; } = new List<User>();
-    public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public virtual ICollection<User> UsersGroups { get; set; } = new List<User>();
 }

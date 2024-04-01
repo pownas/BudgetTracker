@@ -20,14 +20,14 @@ public class TransactionsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Transaction>>> GetTransaction()
     {
-        return await _context.Transaction.ToListAsync();
+        return await _context.Transactions.ToListAsync();
     }
 
     // GET: api/Transactions/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
     {
-        var transaction = await _context.Transaction.FindAsync(id);
+        var transaction = await _context.Transactions.FindAsync(id);
 
         if (transaction == null)
         {
@@ -73,7 +73,7 @@ public class TransactionsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
     {
-        _context.Transaction.Add(transaction);
+        _context.Transactions.Add(transaction);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction($"{nameof(GetTransaction)}", new { id = transaction.Id }, transaction);
@@ -83,13 +83,13 @@ public class TransactionsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTransaction(Guid id)
     {
-        var transaction = await _context.Transaction.FindAsync(id);
+        var transaction = await _context.Transactions.FindAsync(id);
         if (transaction == null)
         {
             return NotFound();
         }
 
-        _context.Transaction.Remove(transaction);
+        _context.Transactions.Remove(transaction);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -97,6 +97,6 @@ public class TransactionsController : ControllerBase
 
     private bool TransactionExists(Guid id)
     {
-        return _context.Transaction.Any(e => e.Id == id);
+        return _context.Transactions.Any(e => e.Id == id);
     }
 }

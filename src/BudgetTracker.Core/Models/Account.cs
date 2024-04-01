@@ -24,11 +24,9 @@ public class Account
     public decimal Balance { get; set; } = 0;
     public bool IsUsed { get; set; } = true;
     public Guid CategoryId { get; set; }
-    [JsonIgnore]
-    public Category Category { get; set; } = new Category();
-    [JsonIgnore]
-    public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     public Guid CreatedByUserId { get; set; }
     [JsonIgnore]
-    public ICollection<User> User { get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    [JsonIgnore]
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

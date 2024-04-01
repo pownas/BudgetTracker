@@ -20,14 +20,14 @@ public class PaidByController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PaidBy>>> GetPaidBy()
     {
-        return await _context.PaidBy.ToListAsync();
+        return await _context.PaidBies.ToListAsync();
     }
 
     // GET: api/PaidBy/5
     [HttpGet("{id}")]
     public async Task<ActionResult<PaidBy>> GetPaidBy(Guid id)
     {
-        var paidBy = await _context.PaidBy.FindAsync(id);
+        var paidBy = await _context.PaidBies.FindAsync(id);
 
         if (paidBy == null)
         {
@@ -73,7 +73,7 @@ public class PaidByController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PaidBy>> PostPaidBy(PaidBy paidBy)
     {
-        _context.PaidBy.Add(paidBy);
+        _context.PaidBies.Add(paidBy);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetPaidBy", new { id = paidBy.Id }, paidBy);
@@ -83,13 +83,13 @@ public class PaidByController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePaidBy(Guid id)
     {
-        var paidBy = await _context.PaidBy.FindAsync(id);
+        var paidBy = await _context.PaidBies.FindAsync(id);
         if (paidBy == null)
         {
             return NotFound();
         }
 
-        _context.PaidBy.Remove(paidBy);
+        _context.PaidBies.Remove(paidBy);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -97,6 +97,6 @@ public class PaidByController : ControllerBase
 
     private bool PaidByExists(Guid id)
     {
-        return _context.PaidBy.Any(e => e.Id == id);
+        return _context.PaidBies.Any(e => e.Id == id);
     }
 }

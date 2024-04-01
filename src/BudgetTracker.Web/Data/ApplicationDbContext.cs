@@ -5,19 +5,23 @@ using BudgetTracker.Core.Models;
 namespace BudgetTracker.Web.Data;
 
 //public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
-public class ApplicationDbContext : DbContext
+public partial class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public ApplicationDbContext()
     {
-        
     }
 
-    public DbSet<Transaction> Transaction { get; set; } = default!;
-    public DbSet<TransactionCategory> TransactionCategory { get; set; } = default!;
-    public DbSet<Account> Account { get; set; } = default!;
-    public DbSet<Category> Category { get; set; } = default!;
-    public DbSet<PaidBy> PaidBy { get; set; } = default!;
-    public DbSet<User> User { get; set; } = default!;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<Account> Accounts { get; set; } = default!;
+    public virtual DbSet<Category> Categories { get; set; } = default!;
+    public virtual DbSet<PaidBy> PaidBies { get; set; } = default!;
+    public virtual DbSet<Transaction> Transactions { get; set; } = default!;
+    public virtual DbSet<TransactionCategory> TransactionCategories { get; set; } = default!;
+    public virtual DbSet<User> Users { get; set; } = default!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,46 +30,106 @@ public class ApplicationDbContext : DbContext
 
         //Information om databasnycklar finns via: https://learn.microsoft.com/en-us/ef/core/change-tracking/relationship-changes
 
+        modelBuilder.Entity<Account>(entity =>
+        {
+            entity.ToTable("Account");
 
-        //modelBuilder.Entity<Transaction>()
-        //    .HasOne(e => e.PaidBy)
-        //    .WithMany(e => e.Transactions)
-        //    .HasForeignKey(e => e.PaidById)
-        //    .OnDelete(DeleteBehavior.NoAction);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Balance).HasColumnType("decimal(18, 2)");
+        });
 
-        //modelBuilder.Entity<Transaction>()
-        //    .HasOne(e => e.User)
-        //    .WithMany(e => e.Transactions)
-        //    .HasForeignKey(e => e.UserId)
-        //    .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.ToTable("Category");
 
-        //modelBuilder.Entity<Transaction>()
-        //    .HasOne(e => e.Account)
-        //    .WithMany(e => e.Transactions)
-        //    .HasForeignKey(e => e.AccountId)
-        //    .OnDelete(DeleteBehavior.NoAction);
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-        //modelBuilder.Entity<Transaction>()
-        //    .HasOne(e => e.TransactionCategory)
-        //    .WithMany(e => e.Transactions)
-        //    .HasForeignKey(e => e.TransactionCategoryId)
-        //    .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(d => d.User).WithMany(p => p.Categories).HasForeignKey(d => d.UserId);
 
-        ////modelBuilder.Entity<Account>()
-        ////    .HasOne(e => e.User)
-        ////    .WithMany(e => e)
-        ////    .HasForeignKey(e => e.UserId)
-        ////    .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(d => d.TransactionCategories).WithMany(p => p.Categories)
+                .UsingEntity<Dictionary<string, object>>(
+                    "CategoryTransactionCategory",
+                    r => r.HasOne<TransactionCategory>().WithMany()
+                        .HasForeignKey("TransactionCategoriesId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<Category>().WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("CategoriesId", "TransactionCategoriesId");
+                        j.ToTable("CategoryTransactionCategory");
+                    });
+        });
 
-        //modelBuilder.Entity<PaidBy>()
-        //    .HasMany(paidBy => paidBy.Transactions)
-        //    .WithOne(t => t.PaidBy)
-        //    .HasForeignKey(t => t.PaidById)
-        //    .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<PaidBy>(entity =>
+        {
+            entity.ToTable("PaidBy");
 
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
+            entity.HasMany(d => d.UsersGroups).WithMany(p => p.PaidByGroups)
+                .UsingEntity<Dictionary<string, object>>(
+                    "PaidByUser",
+                    r => r.HasOne<User>().WithMany()
+                        .HasForeignKey("UsersGroupId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<PaidBy>().WithMany()
+                        .HasForeignKey("PaidByGroupsId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("PaidByGroupsId", "UsersGroupId");
+                        j.ToTable("PaidByUser");
+                    });
+        });
 
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.ToTable("Transaction");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.PaidBy).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.PaidById)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.TransactionCategory).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.TransactionCategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.User).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<TransactionCategory>(entity =>
+        {
+            entity.ToTable("TransactionCategory");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.User).WithMany(p => p.TransactionCategories)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("User");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Account).WithMany(p => p.Users).HasForeignKey(d => d.AccountId);
+        });
+
+        OnModelCreatingPartial(modelBuilder);
     }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
-
-
