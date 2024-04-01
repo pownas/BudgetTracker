@@ -28,7 +28,7 @@ public class Transaction
     /// </summary>
     public DateTime DateCurrency { get; set; }
     public Guid CategoryId { get; set; }
-    public Category Category { get; set; } = new Category();
+    public TransactionCategory Category { get; set; } = new TransactionCategory();
     public Guid UserId { get; set; }
     public User User { get; set; } = new User();
     public Guid PaidById { get; set; }
