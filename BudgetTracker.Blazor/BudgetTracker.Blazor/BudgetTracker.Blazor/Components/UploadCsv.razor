@@ -6,12 +6,17 @@
 
 <h3>Ladda upp CSV-fil</h3>
 
-<InputFile @bind="SelectedFile" />
+<InputFile OnChange="HandleSelectedFile" />
 <button @onclick="HandleUpload">Ladda upp</button>
 
 
 @code {
     private IBrowserFile? SelectedFile;
+
+    private void HandleSelectedFile(InputFileChangeEventArgs e)
+    {
+        SelectedFile = e.File;
+    }
 
     private async Task HandleUpload()
     {
