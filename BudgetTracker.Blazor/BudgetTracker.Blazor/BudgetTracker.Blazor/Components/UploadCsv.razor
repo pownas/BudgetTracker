@@ -6,16 +6,18 @@
 
 <h3>Ladda upp CSV-fil</h3>
 
-<InputFile OnChange="HandleFileSelected" />
+<InputFile @bind="SelectedFile" />
+<button @onclick="HandleUpload">Ladda upp</button>
+
 
 @code {
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
+    private IBrowserFile? SelectedFile;
 
-        if (file != null)
+    private async Task HandleUpload()
+    {
+        if (SelectedFile != null)
         {
-            using var stream = file.OpenReadStream();
+            using var stream = SelectedFile.OpenReadStream();
             using var reader = new StreamReader(stream);
             var transactions = new List<TransactionIca>();
 
@@ -47,8 +49,14 @@
             DbContext.ImportedIcaTransactions.AddRange(transactions);
             await DbContext.SaveChangesAsync();
 
+            Console.WriteLine("Uppladdad CSV.");
             // Om du vill, navigera till en annan sida efter uppladdning
             NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Hantera fall när ingen fil är vald
+            Console.WriteLine("Ingen fil vald.");
         }
     }
 }
