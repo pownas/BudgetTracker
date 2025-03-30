@@ -1,0 +1,54 @@
+﻿@using BudgetTracker.Blazor.Data
+@using BudgetTracker.Shared.DTO
+
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+
+<h3>Ladda upp CSV-fil</h3>
+
+<InputFile OnChange="HandleFileSelected" />
+
+@code {
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file != null)
+        {
+            using var stream = file.OpenReadStream();
+            using var reader = new StreamReader(stream);
+            var transactions = new List<TransactionIca>();
+
+            // Hoppa över första raden (rubriker)
+            await reader.ReadLineAsync();
+
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    break;
+                }
+                var values = line.Split(',');
+
+                transactions.Add(new TransactionIca
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = Guid.Parse(Guid.NewGuid().ToString()),
+                    Datum = DateTime.Parse(values[0]),
+                    Text = values[1],
+                    Typ = values[2],
+                    Budgetgrupp = values[3],
+                    Belopp = decimal.Parse(values[4]),
+                    Saldo = decimal.Parse(values[5])
+                });
+            }
+
+            DbContext.ImportedIcaTransactions.AddRange(transactions);
+            await DbContext.SaveChangesAsync();
+
+            // Om du vill, navigera till en annan sida efter uppladdning
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
