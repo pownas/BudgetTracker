@@ -29,25 +29,93 @@
             // Hoppa över första raden (rubriker)
             await reader.ReadLineAsync();
 
+            int radNr = 0;
             while (!reader.EndOfStream)
             {
+                radNr++;
                 var line = await reader.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     break;
                 }
-                var values = line.Split(',');
+                var values = line.Split(';');
+
+                DateOnly datum = new DateOnly();
+                string text = "";
+                string typ = "";
+                string budgetGrupp = "";
+                decimal belopp = 0;
+                decimal saldo = 0;
+
+
+                if (string.IsNullOrWhiteSpace(values[0]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(datum)}");
+                }
+                else
+                {
+                    datum = DateOnly.Parse(values[0]);
+                }
+
+                if (string.IsNullOrWhiteSpace(values[1]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(text)}");
+                }
+                else
+                {
+                    text = values[1].ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(values[2]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(typ)}");
+                }
+                else
+                {
+                    typ = values[2].ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(values[3]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(budgetGrupp)}");
+                }
+                else
+                {
+                    budgetGrupp = values[3].ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(values[4]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(belopp)}");
+                }
+                else
+                {
+                    // The input string '-70,00 kr' was not in a correct format.
+                    var splittedInput = values[4].Split(' '); // tar bort ' kr'
+                    belopp = decimal.Parse(splittedInput[0]);
+                }
+
+                if (string.IsNullOrWhiteSpace(values[5]))
+                {
+                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(saldo)}");
+                }
+                else
+                {
+                    // The input string '-70,00 kr' was not in a correct format.
+                    var splittedInput = values[5].Split(' '); // tar bort ' kr'
+                    saldo = decimal.Parse(splittedInput[0]);
+                }
 
                 transactions.Add(new TransactionIca
                 {
                     Id = Guid.NewGuid(),
                     UserId = Guid.Parse(Guid.NewGuid().ToString()),
-                    Datum = DateTime.Parse(values[0]),
-                    Text = values[1],
-                    Typ = values[2],
-                    Budgetgrupp = values[3],
-                    Belopp = decimal.Parse(values[4]),
-                    Saldo = decimal.Parse(values[5])
+                    Datum = datum.ToDateTime(TimeOnly.MinValue),
+                    Text = text,
+                    Typ = typ,
+                    Budgetgrupp = budgetGrupp,
+                    Belopp = belopp,
+                    Saldo = saldo
                 });
             }
 
