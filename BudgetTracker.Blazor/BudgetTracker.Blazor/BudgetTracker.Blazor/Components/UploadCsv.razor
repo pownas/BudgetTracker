@@ -29,10 +29,8 @@
             // Hoppa över första raden (rubriker)
             await reader.ReadLineAsync();
 
-            int radNr = 0;
             while (!reader.EndOfStream)
             {
-                radNr++;
                 var line = await reader.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -47,10 +45,9 @@
                 decimal belopp = 0;
                 decimal saldo = 0;
 
-
                 if (string.IsNullOrWhiteSpace(values[0]))
                 {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(datum)}");
+                    Console.WriteLine($"Fel på rad {line}, fältet {nameof(datum)}");
                 }
                 else
                 {
@@ -59,7 +56,7 @@
 
                 if (string.IsNullOrWhiteSpace(values[1]))
                 {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(text)}");
+                    Console.WriteLine($"Fel på rad {line}, fältet {nameof(text)}");
                 }
                 else
                 {
@@ -68,7 +65,7 @@
 
                 if (string.IsNullOrWhiteSpace(values[2]))
                 {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(typ)}");
+                    Console.WriteLine($"Fel på rad {line}, fältet {nameof(typ)}");
                 }
                 else
                 {
@@ -77,7 +74,7 @@
 
                 if (string.IsNullOrWhiteSpace(values[3]))
                 {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(budgetGrupp)}");
+                    Console.WriteLine($"Fel på rad {line}, fältet {nameof(budgetGrupp)}");
                 }
                 else
                 {
@@ -86,7 +83,7 @@
 
                 if (string.IsNullOrWhiteSpace(values[4]))
                 {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(belopp)}");
+                    Console.WriteLine($"Fel på rad {line}, fältet {nameof(belopp)}");
                 }
                 else
                 {
@@ -95,11 +92,7 @@
                     belopp = decimal.Parse(splittedInput[0]);
                 }
 
-                if (string.IsNullOrWhiteSpace(values[5]))
-                {
-                    Console.WriteLine($"Fel på rad {radNr}, fältet {nameof(saldo)}");
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(values[5]))
                 {
                     // The input string '-70,00 kr' was not in a correct format.
                     var splittedInput = values[5].Split(' '); // tar bort ' kr'
