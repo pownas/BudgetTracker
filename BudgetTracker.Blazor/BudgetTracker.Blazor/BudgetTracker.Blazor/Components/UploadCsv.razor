@@ -25,6 +25,7 @@
             using var stream = SelectedFile.OpenReadStream();
             using var reader = new StreamReader(stream);
             var transactions = new List<TransactionIca>();
+            Guid userId = Guid.NewGuid();
 
             // Hoppa över första raden (rubriker)
             await reader.ReadLineAsync();
@@ -102,7 +103,7 @@
                 transactions.Add(new TransactionIca
                 {
                     Id = Guid.NewGuid(),
-                    UserId = Guid.Parse(Guid.NewGuid().ToString()),
+                    UserId = userId,
                     Datum = datum.ToDateTime(TimeOnly.MinValue),
                     Text = text,
                     Typ = typ,
