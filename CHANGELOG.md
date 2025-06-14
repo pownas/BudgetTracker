@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - Downgraded all projects from .NET 9 to .NET 8 for better compatibility
 - Updated all package references to use .NET 8 compatible versions (8.0.3)
 - Simplified AppHost project by removing direct Aspire SDK reference
+- Flattened project structure by moving all projects one level up in the file tree
+- Renamed main projects from BudgetTracker.Blazor to BudgetTracker and BudgetTracker.Client
 
 ### Removed
 - Eliminated redundant src/ folder after migrating all necessary files
