@@ -14,7 +14,8 @@ All notable changes to this project will be documented in this file.
 - Updated namespaces in ApiService and IApiService to reference BudgetTracker.Shared models
 - Updated solution file to include the new BudgetTracker.Services.LocalHost project
 - Downgraded all projects from .NET 9 to .NET 8 for better compatibility
-- Updated Aspire and Microsoft Extension packages to use .NET 8 compatible versions
+- Updated all package references to use .NET 8 compatible versions (8.0.3)
+- Simplified AppHost project by removing direct Aspire SDK reference
 
 ### Removed
 - Eliminated redundant src/ folder after migrating all necessary files
