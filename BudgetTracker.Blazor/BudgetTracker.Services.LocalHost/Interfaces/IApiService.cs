@@ -1,4 +1,4 @@
-﻿using BudgetTracker.Core.Models;
+using BudgetTracker.Shared.Models;
 
 namespace BudgetTracker.Services.LocalHost.Interfaces;
 

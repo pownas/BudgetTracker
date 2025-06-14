@@ -1,4 +1,4 @@
-﻿using BudgetTracker.Core.Models;
+using BudgetTracker.Shared.Models;
 using BudgetTracker.Services.LocalHost.Interfaces;
 using System.Net.Http.Json;
 
