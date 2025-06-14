@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "main,dev,feature/github-agent" ]
+    branches: [ "main", "dev", "feature/github-agent" ]
   pull_request:
-    branches: [ "main,dev" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build:
