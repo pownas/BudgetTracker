@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - Consolidated project structure by moving components from src/ folder to BudgetTracker.Blazor
 - Updated namespaces in ApiService and IApiService to reference BudgetTracker.Shared models
 - Updated solution file to include the new BudgetTracker.Services.LocalHost project
+- Downgraded all projects from .NET 9 to .NET 8 for better compatibility
+- Updated Aspire and Microsoft Extension packages to use .NET 8 compatible versions
 
 ### Removed
 - Eliminated redundant src/ folder after migrating all necessary files
